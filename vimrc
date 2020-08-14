@@ -1,4 +1,3 @@
-
 """""""""""""""""""""""""""""""""
 "  vimrc config
 """""""""""""""""""""""""""""""""
@@ -6,7 +5,7 @@
 " basic settings
 set nocompatible	" don't be like vi
 set encoding=utf8
-
+let mapleader = ','
 
 """""""""""""""""""""""""""""""""
 "  Vundle setup
@@ -18,11 +17,35 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'   
 
+" Utility
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'tpope/vim-fugitive'
+Plugin 'preservim/nerdtree'
+Plugin 'neoclide/coc.nvim'
+Plugin 'alvan/vim-closetag'
+Plugin 'mg979/vim-visual-multi', {'branch': 'master'}
+Plugin 'tpope/vim-surround'
+Plugin 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plugin 'tpope/vim-eunuch'
+
+" fzf
+set rtp+=~/.fzf
+Plugin 'junegunn/fzf.vim'
+Plugin 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
+
+" Language specfic plugins
+Plugin 'pangloss/vim-javascript'
+Plugin 'maxmellon/vim-jsx-pretty'
+Plugin 'mattn/emmet-vim'
+
+" Interface/themes
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'morhetz/gruvbox'
+Plugin 'tomasr/molokai'
+Plugin 'joshdick/onedark.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -58,10 +81,10 @@ set incsearch
 set smartcase
 
 " always display status line
-set statusline=0		
+set statusline=0
 
 " highlight current line
-set cursorline          
+set cursorline
 
 " enable mouse
 set mouse=a
@@ -85,6 +108,66 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline_theme='luna'
 
-" dont show default command line 
+" dont show default command line
 set noshowmode
 set noshowcmd
+
+" NERDTree configurations
+let NERDTreeMinimalUI=1
+let NERDTreeShowHidden=1
+let NERDTreeAutoDeleteBuffer = 1
+" exit vim if NERDTree is the only window left
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" disable warnings for vim-visual-multi
+let g:VM_show_warnings = 0
+
+"""""""""""""""""""""""""""""""""
+" Mappings
+"""""""""""""""""""""""""""""""""
+
+" NERDTree
+map <C-f> :NERDTreeToggle<CR>
+
+" FZF
+nmap <Leader>f :GFiles<CR>
+nmap <Leader>F :Files<CR>
+
+" Use ctrl-[hjkl] to select the active split!
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
+
+" closing buffers with leader c
+nnoremap <leader>c :bp\|bd #<CR>
+
+" moving through buffers
+nnoremap <silent> <Tab> :bnext<CR>
+nnoremap <silent> <S-Tab> :bprevious<CR>
+
+" nvim.coc key mappings
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" autoclose html tags
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.js'
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.js'
+let g:closetag_filetypes = 'html,xhtml,phtml,js'
+let g:closetag_xhtml_filetypes = 'xhtml,jsx,js'
+let g:closetag_emptyTags_caseSensitive = 1
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ }
+let g:closetag_shortcut = '>'
+let g:closetag_close_shortcut = '<leader>>'
+" hack for jsx: Press tab after closing a tag
+autocmd FileType javascript inoremap <buffer> ><Tab> ><Esc>F<lyt>o</<C-r>"><Esc>O
