@@ -29,16 +29,25 @@ Plugin 'mg979/vim-visual-multi', {'branch': 'master'}
 Plugin 'tpope/vim-surround'
 Plugin 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plugin 'tpope/vim-eunuch'
+Plugin 'tpope/vim-commentary'
 
 " fzf
 set rtp+=~/.fzf
 Plugin 'junegunn/fzf.vim'
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
 
-" Language specfic plugins
+" javascript specfic plugins
 Plugin 'pangloss/vim-javascript'
 Plugin 'maxmellon/vim-jsx-pretty'
 Plugin 'mattn/emmet-vim'
+
+" Markdown specfic plugins
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+
+" Typing freely
+Plugin 'junegunn/goyo.vim'
 
 " Interface/themes
 Plugin 'vim-airline/vim-airline'
@@ -46,6 +55,7 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'morhetz/gruvbox'
 Plugin 'tomasr/molokai'
 Plugin 'joshdick/onedark.vim'
+Plugin 'rakr/vim-one'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -95,12 +105,25 @@ set noswapfile
 " allow hidden buffers
 set hidden
 
+" markdown preview settings
+let g:mkdp_browser = 'firefox'
+
 " styling and theme
 syntax on
 set t_Co=256
 set background=dark
+
+" Enable 24-bit true colors if your terminal supports it.
+if (has("termguicolors"))
+  " https://github.com/vim/vim/issues/993#issuecomment-255651605
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+  set termguicolors
+endif
+
 let g:gruvbox_contrast_dark='hard'
-colorscheme gruvbox
+colorscheme one
 
 " Airline configurations
 let g:airline_powerline_fonts = 1
